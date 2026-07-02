@@ -1,22 +1,61 @@
 {
   "name": "KizQuizz — Know Your Culture",
   "short_name": "KizQuizz",
-  "description": "Le quiz kizomba ultime — Kizomba, Urban Kiz, Semba, Tarraxo",
+  "description": "Le quiz kizomba ultime — 294 questions, 4 niveaux, 6 langues",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0d0d",
-  "theme_color": "#0d0d0d",
+  "background_color": "#0d0820",
+  "theme_color": "#0d0820",
   "orientation": "portrait",
-  "categories": ["games", "education", "music"],
   "lang": "fr",
   "icons": [
-    { "src": "/icons/icon-72.png",   "sizes": "72x72",   "type": "image/png" },
-    { "src": "/icons/icon-96.png",   "sizes": "96x96",   "type": "image/png" },
-    { "src": "/icons/icon-128.png",  "sizes": "128x128", "type": "image/png" },
-    { "src": "/icons/icon-144.png",  "sizes": "144x144", "type": "image/png" },
-    { "src": "/icons/icon-152.png",  "sizes": "152x152", "type": "image/png" },
-    { "src": "/icons/icon-192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icons/icon-384.png",  "sizes": "384x384", "type": "image/png" },
-    { "src": "/icons/icon-512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }
