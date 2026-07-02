@@ -4,50 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0010">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="KizQuizz">
-  <meta name="mobile-web-app-capable" content="yes">
-  <title>KizQuizz — Know Your Culture</title>
+<title>KizQuizz — Know Your Culture</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
 
   :root {
-    --gold: #ffd166;
-    --gold2: #f4a329;
-    --purple: #0a0010;
-    --purple2: #1a0035;
-    --purple3: #2d0060;
-    --accent: #c084fc;
-    --accent2: #7c3aed;
-    --white: #f0e6ff;
-    --gray: #6b5a8a;
-    --red: #ff4d6d;
-    --green: #06d6a0;
-    --card: rgba(45,0,96,0.45);
-    --border: rgba(255,209,102,0.15);
+    --gold:    #c9a84c;
+    --gold2:   #e8c56d;
+    --gold3:   #ffd700;
+    --goldsh:  #fff0a0;
+    --bg:      #0d0d0d;
+    --bg2:     #111318;
+    --bg3:     #0f1b2d;
+    --card:    rgba(20,18,14,0.85);
+    --border:  rgba(201,168,76,0.22);
+    --white:   #f5edd8;
+    --gray:    #8a8070;
+    --red:     #e05c5c;
+    --green:   #4caf7d;
+    --accent:  #c9a84c;
+    --accent2: #8b6914;
+    --purple:  #0d0d0d;
+    --purple2: #111318;
+    --purple3: #0f1b2d;
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
 
   body {
-    background: var(--purple);
+    background: var(--bg);
     color: var(--white);
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* STARS BG */
+  /* LUXURY BG */
   body::before {
     content:'';
     position:fixed; inset:0;
     background:
-      radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 20%, rgba(255,209,102,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 80%, rgba(192,132,252,0.1) 0%, transparent 50%);
+      radial-gradient(ellipse at 15% 25%, rgba(201,168,76,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 70%, rgba(15,27,45,0.8) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(201,168,76,0.04) 0%, transparent 50%);
     pointer-events:none; z-index:0;
   }
 
@@ -70,26 +69,31 @@
   /* ======================== LOGO / SPLASH ======================== */
   #splash {
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    min-height:100vh; padding:2rem; text-align:center;
+    min-height:100vh; padding:2rem 1.5rem; text-align:center;
+    background: radial-gradient(ellipse at 50% 30%, rgba(201,168,76,0.08) 0%, transparent 65%),
+                radial-gradient(ellipse at 50% 90%, rgba(15,27,45,0.6) 0%, transparent 60%),
+                #0d0d0d;
   }
 
   .logo-wrap {
-    margin-bottom:2.5rem;
+    margin-bottom:1.5rem;
     animation: floatLogo 4s ease-in-out infinite;
   }
 
-  @keyframes floatLogo { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+  @keyframes floatLogo { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
 
-  .logo-svg { width:280px; max-width:90vw; }
+  .splash-logo-img { width:240px; max-width:80vw; }
+  .logo-portrait { width:100%; max-width:260px; border-radius:16px; }
+  .logo-fallback-svg { justify-content:center; align-items:center; }
 
   .tagline {
-    font-family:'Playfair Display', serif;
-    font-size:clamp(0.8rem,3vw,1.1rem);
-    color: var(--gold);
-    letter-spacing:0.3em;
+    font-family:'Cormorant Garamond', serif;
+    font-size:clamp(0.85rem,3vw,1rem);
+    color: var(--gold2);
+    letter-spacing:0.25em;
     text-transform:uppercase;
-    margin-bottom:3rem;
-    opacity:0.85;
+    margin-bottom:2rem;
+    opacity:0.8;
   }
 
   .lang-grid {
@@ -97,40 +101,42 @@
     width:100%; max-width:400px; margin-bottom:2rem;
   }
   .lang-btn {
-    background: var(--card);
+    background: rgba(20,18,14,0.7);
     border:1px solid var(--border);
     color: var(--white);
     padding:0.75rem 0.5rem;
     border-radius:12px;
-    font-family:'Space Grotesk',sans-serif;
+    font-family:'DM Sans',sans-serif;
     font-size:0.9rem;
     cursor:pointer;
     transition:all 0.25s;
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(12px);
   }
   .lang-btn:hover, .lang-btn.active {
-    background: rgba(255,209,102,0.15);
-    border-color: var(--gold);
-    color: var(--gold);
+    background: rgba(201,168,76,0.12);
+    border-color: var(--gold2);
+    color: var(--gold2);
     transform:translateY(-2px);
+    box-shadow:0 4px 20px rgba(201,168,76,0.15);
   }
   .lang-flag { font-size:1.4rem; display:block; margin-bottom:0.2rem; }
 
   .enter-btn {
-    background: linear-gradient(135deg, var(--gold2), var(--gold));
-    color: var(--purple);
+    background: linear-gradient(135deg, #8b6914, var(--gold), var(--gold2), var(--gold3));
+    color: #0d0d0d;
     border:none;
-    padding:1rem 3rem;
+    padding:1.1rem 3rem;
     border-radius:50px;
-    font-family:'Space Grotesk',sans-serif;
-    font-size:1.1rem;
-    font-weight:700;
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.2rem;
+    font-weight:800;
     cursor:pointer;
-    letter-spacing:0.05em;
+    letter-spacing:0.08em;
     transition:all 0.3s;
-    box-shadow:0 0 30px rgba(255,209,102,0.3);
+    box-shadow:0 4px 30px rgba(201,168,76,0.35), 0 0 0 1px rgba(255,215,0,0.2);
+    text-transform:uppercase;
   }
-  .enter-btn:hover { transform:scale(1.05); box-shadow:0 0 50px rgba(255,209,102,0.5); }
+  .enter-btn:hover { transform:scale(1.04) translateY(-2px); box-shadow:0 8px 50px rgba(201,168,76,0.55); }
 
   /* ======================== NAV ======================== */
   #main { display:none; flex-direction:column; min-height:100vh; }
@@ -138,18 +144,19 @@
   .top-bar {
     display:flex; align-items:center; justify-content:space-between;
     padding:1rem 1.25rem;
-    background:rgba(10,0,16,0.8);
+    background:rgba(10,9,7,0.92);
     backdrop-filter:blur(20px);
     border-bottom:1px solid var(--border);
     position:sticky; top:0; z-index:100;
   }
   .top-logo {
-    font-family:'Playfair Display',serif;
-    font-size:1.4rem;
-    font-weight:900;
-    background: linear-gradient(135deg, var(--gold2), var(--gold));
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.5rem;
+    font-weight:800;
+    background: linear-gradient(135deg, var(--gold2), var(--gold3), var(--goldsh));
     -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     background-clip:text;
+    letter-spacing:0.02em;
   }
   .top-logo span { color:var(--accent); -webkit-text-fill-color:var(--accent); }
 
@@ -222,10 +229,11 @@
   }
   .style-chip {
     flex-shrink:0;
-    background:var(--card); border:1px solid var(--border);
+    background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.25);
     border-radius:20px; padding:0.4rem 0.9rem;
-    font-size:0.75rem; color:var(--accent);
+    font-size:0.75rem; color:var(--gold2);
     backdrop-filter:blur(10px); white-space:nowrap;
+    font-family:'DM Sans',sans-serif; font-weight:500;
   }
 
   .stats-row {
@@ -237,22 +245,23 @@
     backdrop-filter:blur(10px);
   }
   .stat-num {
-    font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900;
-    color:var(--gold); display:block;
+    font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:800;
+    color:var(--gold2); display:block;
   }
   .stat-label { font-size:0.65rem; color:var(--gray); margin-top:0.2rem; }
 
   .play-big {
     width:100%; padding:1.2rem;
-    background:linear-gradient(135deg,var(--accent2),var(--purple3));
-    border:1px solid var(--accent);
-    border-radius:20px; color:var(--white);
-    font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700;
+    background:linear-gradient(135deg,#8b6914,var(--gold),var(--gold2));
+    border:none;
+    border-radius:18px; color:#0d0d0d;
+    font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:800;
     cursor:pointer; transition:all 0.3s; margin-top:0.5rem;
-    box-shadow:0 0 30px rgba(192,132,252,0.2);
+    box-shadow:0 4px 25px rgba(201,168,76,0.3);
     display:flex; align-items:center; justify-content:center; gap:0.75rem;
+    letter-spacing:0.04em; text-transform:uppercase;
   }
-  .play-big:hover { transform:translateY(-2px); box-shadow:0 0 50px rgba(192,132,252,0.35); }
+  .play-big:hover { transform:translateY(-2px); box-shadow:0 8px 40px rgba(201,168,76,0.5); }
 
   /* ======================== QUIZ ======================== */
   .level-select { margin-bottom:1.5rem; }
@@ -333,20 +342,20 @@
     letter-spacing:0.1em; margin-bottom:0.75rem; display:block;
   }
   .question-text {
-    font-family:'Playfair Display',serif; font-size:clamp(1rem,3.5vw,1.25rem);
+    font-family:'Cormorant Garamond',serif; font-size:clamp(1.1rem,4vw,1.35rem);
     font-weight:700; line-height:1.4; color:var(--white);
   }
 
   .answers-grid { display:grid; gap:0.65rem; }
   .answer-btn {
-    background:rgba(26,0,53,0.6); border:1px solid var(--border);
+    background:rgba(20,18,14,0.7); border:1px solid rgba(201,168,76,0.18);
     border-radius:14px; padding:1rem 1.25rem;
     color:var(--white); text-align:left;
-    font-family:'Space Grotesk',sans-serif; font-size:0.9rem;
+    font-family:'DM Sans',sans-serif; font-size:0.9rem;
     cursor:pointer; transition:all 0.2s; backdrop-filter:blur(10px);
     display:flex; align-items:center; gap:0.75rem;
   }
-  .answer-btn:hover:not(:disabled) { border-color:var(--accent); background:rgba(124,58,237,0.2); }
+  .answer-btn:hover:not(:disabled) { border-color:var(--gold2); background:rgba(201,168,76,0.1); }
   .answer-btn.correct { border-color:var(--green); background:rgba(6,214,160,0.15); color:var(--green); }
   .answer-btn.wrong { border-color:var(--red); background:rgba(255,77,109,0.15); color:var(--red); }
   .answer-btn:disabled { cursor:default; }
@@ -669,6 +678,67 @@
   }
   .xp-earned-banner strong { color:var(--gold); font-size:1.1rem; }
 
+
+  .upload-mp3-btn {
+    display:inline-block; cursor:pointer;
+    background:rgba(201,168,76,0.12); border:1px solid var(--border);
+    border-radius:20px; padding:0.5rem 1.2rem;
+    font-size:0.82rem; color:var(--gold2);
+    font-family:'DM Sans',sans-serif; transition:all 0.2s;
+  }
+  .upload-mp3-btn:hover { background:rgba(201,168,76,0.2); border-color:var(--gold2); }
+  .music-hero { text-align:center; }
+
+  /* BOTTOM NAV gold */
+  .nav-item.active { color:var(--gold2) !important; border-color:rgba(201,168,76,0.3) !important; background:rgba(201,168,76,0.07) !important; }
+  .nav-item { color:#5a5040 !important; }
+  .nav-item .icon { font-size:1.25rem; }
+
+  /* TICKER gold */
+  .ticker-wrap {
+    background:linear-gradient(90deg,#0d0d0d,rgba(201,168,76,0.08),#0d0d0d);
+  }
+  .ticker-item { color:var(--gold2); font-size:0.78rem; }
+
+  /* LEVEL CARDS */
+  .level-card.débutant { border-color:rgba(76,175,125,0.4) !important; }
+  .level-card.danseur  { border-color:rgba(201,168,76,0.4) !important; }
+  .level-card.expert   { border-color:rgba(201,168,76,0.6) !important; }
+  .level-card.légende  { border-color:rgba(224,92,92,0.4) !important; }
+
+  /* PROFILE rank gold */
+  .profile-rank { color:var(--gold2) !important; }
+  .streak-num   { color:var(--gold2) !important; }
+  .stat-box-num { color:var(--gold2) !important; }
+  .badge-item.unlocked { border-color:var(--gold2) !important; }
+  .badge-item.unlocked .badge-name { color:var(--gold2) !important; }
+
+  /* HOME title */
+  .home-hero h1 {
+    font-family:'Cormorant Garamond',serif !important;
+    font-size:clamp(1.9rem,7vw,3rem) !important;
+    font-weight:800 !important;
+    background:linear-gradient(135deg,var(--gold2),var(--gold3),var(--goldsh)) !important;
+    -webkit-background-clip:text !important;
+    -webkit-text-fill-color:transparent !important;
+    background-clip:text !important;
+    line-height:1.1 !important;
+  }
+
+  /* XP bar gold */
+  .xp-fill { background:linear-gradient(90deg,#8b6914,var(--gold2),var(--gold3)) !important; }
+  .xp-label { color:var(--gold2) !important; }
+
+  /* TOAST gold */
+  .toast { border-color:var(--gold2) !important; }
+  .toast-title { color:var(--gold2) !important; }
+  .badge-modal { border-color:var(--gold2) !important; }
+  .badge-modal-title { 
+    background:linear-gradient(135deg,var(--gold),var(--gold2)) !important;
+    -webkit-background-clip:text !important; -webkit-text-fill-color:transparent !important;
+  }
+  .badge-modal-btn { background:linear-gradient(135deg,#8b6914,var(--gold2)) !important; }
+
 </style>
 </head>
 <body>
@@ -681,55 +751,33 @@
   <!-- ======================== SPLASH ======================== -->
   <div id="splash">
     <div class="logo-wrap">
-      <svg class="logo-svg" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#f4a329"/>
-            <stop offset="50%" style="stop-color:#ffd166"/>
-            <stop offset="100%" style="stop-color:#ffe599"/>
-          </linearGradient>
-          <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#7c3aed"/>
-            <stop offset="100%" style="stop-color:#c084fc"/>
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- Orbits déco -->
-        <ellipse cx="200" cy="80" rx="190" ry="68" fill="none" stroke="url(#purpleGrad)" stroke-width="0.5" opacity="0.3"/>
-        <ellipse cx="200" cy="80" rx="170" ry="55" fill="none" stroke="#ffd166" stroke-width="0.3" opacity="0.15"/>
-
-        <!-- Stars déco -->
-        <circle cx="25" cy="25" r="2" fill="#ffd166" opacity="0.8"/>
-        <circle cx="370" cy="30" r="1.5" fill="#c084fc" opacity="0.8"/>
-        <circle cx="15" cy="130" r="1" fill="#ffd166" opacity="0.6"/>
-        <circle cx="385" cy="140" r="2" fill="#c084fc" opacity="0.6"/>
-        <circle cx="50" cy="140" r="1.2" fill="#ffd166" opacity="0.5"/>
-        <circle cx="340" cy="15" r="1.8" fill="#ffd166" opacity="0.7"/>
-        <circle cx="100" cy="15" r="1" fill="#c084fc" opacity="0.5"/>
-        <circle cx="300" cy="150" r="1.3" fill="#c084fc" opacity="0.6"/>
-
-        <!-- KIZ — Playfair-style bold -->
-        <text x="50" y="108" font-family="Georgia, serif" font-size="78" font-weight="900"
-          fill="url(#goldGrad)" filter="url(#glow)" letter-spacing="-2">KIZ</text>
-
-        <!-- Séparateur losange -->
-        <polygon points="210,55 220,80 210,105 200,80" fill="url(#purpleGrad)" opacity="0.9"/>
-
-        <!-- QUIZZ — Space Grotesk style -->
-        <text x="228" y="108" font-family="Arial, sans-serif" font-size="72" font-weight="900"
-          fill="url(#purpleGrad)" filter="url(#glow)" letter-spacing="-1">QUIZZ</text>
-
-        <!-- Underline gold -->
-        <rect x="50" y="118" width="300" height="3" rx="2" fill="url(#goldGrad)" opacity="0.6"/>
-
-        <!-- Tagline micro -->
-        <text x="200" y="145" font-family="Arial, sans-serif" font-size="10"
-          fill="#c084fc" text-anchor="middle" letter-spacing="4" opacity="0.8">KNOW YOUR CULTURE</text>
-      </svg>
+      <div class="splash-logo-img" id="splash-logo-img">
+        <!-- Logo portrait (image 1) sur mobile -->
+        <img src="icons/logo-portrait.png" alt="KizQuizz" class="logo-portrait" id="logo-portrait" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='flex'">
+        <!-- Fallback SVG si pas encore uploadé -->
+        <div id="logo-fallback" class="logo-fallback-svg" style="display:none">
+          <svg viewBox="0 0 320 320" width="220" height="220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gG" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c9a84c"/>
+                <stop offset="50%" stop-color="#ffd700"/>
+                <stop offset="100%" stop-color="#fff0a0"/>
+              </linearGradient>
+              <filter id="gs"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="160" cy="175" r="115" fill="none" stroke="url(#gG)" stroke-width="5" filter="url(#gs)" opacity="0.9"/>
+            <!-- Crown -->
+            <polygon points="100,75 120,45 140,65 160,35 180,65 200,45 220,75 210,90 110,90" fill="url(#gG)" filter="url(#gs)"/>
+            <circle cx="100" cy="75" r="6" fill="#ffd700"/>
+            <circle cx="160" cy="35" r="6" fill="#ffd700"/>
+            <circle cx="220" cy="75" r="6" fill="#ffd700"/>
+            <!-- K -->
+            <text x="80" y="230" font-family="Georgia,serif" font-size="140" font-weight="900" fill="url(#gG)" filter="url(#gs)" letter-spacing="-5">K</text>
+            <!-- ? -->
+            <text x="185" y="240" font-family="Georgia,serif" font-size="110" font-weight="900" fill="url(#gG)" opacity="0.85">?</text>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <p class="tagline" id="splash-tagline">Choisis ta langue / Choose your language</p>
@@ -765,7 +813,7 @@
 
     <!-- TOP BAR -->
     <div class="top-bar">
-      <div class="top-logo">Kiz<span>Quizz</span></div>
+      <div class="top-logo">KizQuizz 👑</div>
       <button class="lang-mini" onclick="goToSplash()" id="lang-display">🇫🇷 FR</button>
     </div>
 
@@ -789,8 +837,28 @@
 
     <!-- PAGES -->
     <div class="page active" id="page-home">
+      <!-- Silhouettes danseurs kiz -->
+      <div style="text-align:center;padding:1rem 0 0;opacity:0.18;pointer-events:none;user-select:none">
+        <svg viewBox="0 0 200 80" width="180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Couple kizomba simplifié -->
+          <ellipse cx="75" cy="15" rx="9" ry="9" fill="#c9a84c"/>
+          <line x1="75" y1="24" x2="75" y2="52" stroke="#c9a84c" stroke-width="4" stroke-linecap="round"/>
+          <line x1="75" y1="35" x2="60" y2="45" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>
+          <line x1="75" y1="35" x2="92" y2="38" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>
+          <line x1="75" y1="52" x2="65" y2="70" stroke="#c9a84c" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="75" y1="52" x2="85" y2="70" stroke="#c9a84c" stroke-width="3.5" stroke-linecap="round"/>
+          <ellipse cx="115" cy="15" rx="9" ry="9" fill="#c9a84c"/>
+          <line x1="115" y1="24" x2="115" y2="52" stroke="#c9a84c" stroke-width="4" stroke-linecap="round"/>
+          <line x1="115" y1="35" x2="98" y2="38" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>
+          <line x1="115" y1="35" x2="130" y2="45" stroke="#c9a84c" stroke-width="3" stroke-linecap="round"/>
+          <line x1="115" y1="52" x2="105" y2="70" stroke="#c9a84c" stroke-width="3.5" stroke-linecap="round"/>
+          <line x1="115" y1="52" x2="125" y2="70" stroke="#c9a84c" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- Connexion entre les deux -->
+          <line x1="92" y1="38" x2="98" y2="38" stroke="#c9a84c" stroke-width="2" stroke-dasharray="3,2" opacity="0.6"/>
+        </svg>
+      </div>
       <div class="home-hero">
-        <h1 id="home-title">Teste ta culture<br>Kizomba 🦁</h1>
+        <h1 id="home-title">Teste ta culture<br><span style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold2)">Kizomba</span> 👑</h1>
         <p id="home-subtitle">Histoire, pionniers, styles, artistes, DJs...<br>Tu crois tout savoir ? Prouve-le.</p>
       </div>
 
@@ -948,7 +1016,15 @@
       <div class="music-hero">
         <h2 id="music-title">🎵 Vibration Kiz</h2>
         <p id="music-subtitle">Musique exclusive — La bande son de la culture</p>
+        <div style="margin-top:1rem">
+          <label class="upload-mp3-btn" for="mp3-upload">
+            📁 Ajouter un MP3
+          </label>
+          <input type="file" id="mp3-upload" accept="audio/*" style="display:none" onchange="loadMP3(event)">
+        </div>
       </div>
+      <!-- AUDIO ENGINE -->
+      <audio id="audio-engine" preload="none"></audio>
 
       <div class="player-card">
         <div class="player-disc" id="player-disc">🎵</div>
@@ -2190,49 +2266,144 @@ function selectTrack(i) {
   renderTracks();
 }
 
-function togglePlay() {
-  isPlaying = !isPlaying;
+// ── AUDIO ENGINE RÉEL ──────────────────────────────────────────────────
+const audioEl = () => document.getElementById('audio-engine');
+let uploadedTracks = JSON.parse(localStorage.getItem('kizquizz_tracks') || '[]');
+// uploadedTracks = [{name, artist, style, src (base64 ou blob URL)}]
+
+function loadMP3(event) {
+  const files = event.target.files;
+  if(!files.length) return;
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const track = {
+        name: file.name.replace(/\.mp3$/i,'').replace(/_/g,' '),
+        artist: '✨ KizQuizz Music',
+        style: 'Kizomba',
+        src: e.target.result,
+        emoji: '🎵',
+        dur: '–'
+      };
+      uploadedTracks.push(track);
+      // Limit to 20 tracks in localStorage
+      if(uploadedTracks.length > 20) uploadedTracks = uploadedTracks.slice(-20);
+      try { localStorage.setItem('kizquizz_tracks', JSON.stringify(uploadedTracks)); } catch(e){}
+      renderTracks();
+      if(uploadedTracks.length === 1) selectTrack(TRACKS.length); // first upload → select it
+      showToast('🎵', 'Musique ajoutée !', track.name);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function getAllTracks() { return [...TRACKS, ...uploadedTracks]; }
+
+function selectTrack(i) {
+  currentTrack = i;
+  const all = getAllTracks();
+  const t = all[i];
+  if(!t) return;
+  document.getElementById('player-track-name').textContent = t.name;
+  document.getElementById('player-track-artist').textContent = t.artist;
+  document.getElementById('time-total').textContent = t.dur || '–';
+  document.getElementById('player-disc').textContent = t.emoji || '🎵';
+  const audio = audioEl();
+  if(t.src) {
+    audio.src = t.src;
+    audio.load();
+    if(isPlaying) audio.play().catch(()=>{});
+  } else {
+    audio.src = '';
+    if(isPlaying) { isPlaying=false; updatePlayBtn(); }
+  }
+  renderTracks();
+}
+
+function updatePlayBtn() {
   const btn = document.getElementById('play-pause-btn');
   const disc = document.getElementById('player-disc');
   btn.textContent = isPlaying ? '⏸' : '▶';
-  if(isPlaying) { disc.classList.add('spinning'); animateProgress(); }
-  else { disc.classList.remove('spinning'); }
+  isPlaying ? disc.classList.add('spinning') : disc.classList.remove('spinning');
 }
 
-let progressInterval = null;
-let progressVal = 0;
-function animateProgress() {
-  clearInterval(progressInterval);
-  progressInterval = setInterval(() => {
-    if(!isPlaying) return;
-    progressVal = (progressVal + 0.2) % 100;
-    document.getElementById('track-progress').style.width = progressVal+'%';
-    const total = 270;
-    const current = Math.floor(progressVal/100*total);
-    const m = Math.floor(current/60);
-    const s = current%60;
+function togglePlay() {
+  const audio = audioEl();
+  const all = getAllTracks();
+  const t = all[currentTrack];
+  if(!t || !t.src) {
+    showToast('🎵','Aucune musique','Ajoute un fichier MP3 via le bouton ci-dessus'); return;
+  }
+  if(!audio.src || audio.src === window.location.href) { audio.src = t.src; audio.load(); }
+  if(isPlaying) { audio.pause(); isPlaying=false; }
+  else { audio.play().then(()=>{ isPlaying=true; }).catch(err=>{ showToast('⚠️','Erreur audio',err.message); }); }
+  updatePlayBtn();
+}
+
+// Audio events
+document.addEventListener('DOMContentLoaded', ()=>{
+  const audio = audioEl();
+  if(!audio) return;
+  audio.addEventListener('timeupdate', ()=>{
+    if(!audio.duration) return;
+    const pct = (audio.currentTime/audio.duration)*100;
+    document.getElementById('track-progress').style.width = pct+'%';
+    const m=Math.floor(audio.currentTime/60), s=Math.floor(audio.currentTime%60);
     document.getElementById('time-current').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  }, 300);
-}
-
-function nextTrack() { selectTrack((currentTrack+1)%TRACKS.length); }
-function prevTrack() { selectTrack((currentTrack-1+TRACKS.length)%TRACKS.length); }
-function shuffleTrack() { selectTrack(Math.floor(Math.random()*TRACKS.length)); }
-function toggleLoop() { isLooping=!isLooping; }
-function seekTrack(e) {
-  const rect = e.currentTarget.getBoundingClientRect();
-  progressVal = ((e.clientX-rect.left)/rect.width)*100;
-  document.getElementById('track-progress').style.width = progressVal+'%';
-}
-</script>
-
-<script>
-if('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('KizQuizz PWA ready ✅'))
-      .catch(e => console.log('SW error:', e));
+    const td=Math.floor(audio.duration), tm=Math.floor(td/60), ts=td%60;
+    document.getElementById('time-total').textContent = `${tm}:${ts.toString().padStart(2,'0')}`;
   });
+  audio.addEventListener('ended', ()=>{
+    if(isLooping) { audio.currentTime=0; audio.play(); }
+    else nextTrack();
+  });
+  audio.addEventListener('play', ()=>{ isPlaying=true; updatePlayBtn(); });
+  audio.addEventListener('pause', ()=>{ isPlaying=false; updatePlayBtn(); });
+});
+
+function nextTrack() {
+  const all = getAllTracks();
+  selectTrack((currentTrack+1)%all.length);
+  if(isPlaying) audioEl().play().catch(()=>{});
+}
+function prevTrack() {
+  const all = getAllTracks();
+  selectTrack((currentTrack-1+all.length)%all.length);
+  if(isPlaying) audioEl().play().catch(()=>{});
+}
+function shuffleTrack() {
+  const all = getAllTracks();
+  selectTrack(Math.floor(Math.random()*all.length));
+  if(isPlaying) audioEl().play().catch(()=>{});
+}
+function toggleLoop() {
+  isLooping=!isLooping;
+  const btn = document.querySelector('.ctrl-btn[onclick="toggleLoop()"]');
+  if(btn) btn.style.color = isLooping ? 'var(--gold2)' : '';
+  audioEl().loop = isLooping;
+  showToast(isLooping?'🔁':'➡️', isLooping?'Répétition activée':'Répétition désactivée','');
+}
+function seekTrack(e) {
+  const audio = audioEl();
+  if(!audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX-rect.left)/rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+function renderTracks() {
+  const list = document.getElementById('tracks-list');
+  const all = getAllTracks();
+  list.innerHTML = all.map((t,i) => `
+    <div class="track-item ${i===currentTrack?'active':''}" onclick="selectTrack(${i})">
+      <span class="track-num ${i===currentTrack?'playing':''}">${i===currentTrack&&isPlaying?'♪':i+1}</span>
+      <div class="track-info">
+        <div class="track-name">${t.emoji||'🎵'} ${t.name}</div>
+        <div class="track-style">${t.style}${t.src?'':' — <em style=color:#5a5040>pas encore uploadé</em>'}</div>
+      </div>
+      <span class="track-duration">${t.dur||'–'}</span>
+    </div>
+  `).join('');
 }
 </script>
 </body>
