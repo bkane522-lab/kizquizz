@@ -499,6 +499,28 @@ body::before {
 }
 .yt-load-btn:hover { transform:scale(1.03); }
 
+/* Default playlist track chips */
+.dtrack-chip {
+  flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:.3rem;
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:.6rem .8rem; cursor:pointer; transition:all .2s; min-width:70px;
+}
+.dtrack-chip.playing { border-color:var(--warm); background:rgba(255,154,92,.12); }
+.dtrack-chip:hover { border-color:var(--accent); }
+.dtrack-ic { font-size:1.3rem; }
+.dtrack-lbl { font-size:.62rem; color:var(--gray); white-space:nowrap; }
+.dtrack-chip.playing .dtrack-lbl { color:var(--warm); font-weight:700; }
+
+/* Level lock overlay */
+.level-card.locked { opacity:.45; filter:grayscale(.6); cursor:default; }
+.level-card .lock-badge {
+  position:absolute; top:.5rem; right:.5rem; font-size:1rem;
+  background:rgba(0,0,0,.5); border-radius:8px; padding:.15rem .35rem;
+}
+.level-card .unlock-req {
+  font-size:.6rem; color:var(--warm); margin-top:.3rem; display:block; font-weight:600;
+}
+
 .music-tip {
   border-radius:13px; padding:.9rem; font-size:.78rem; color:var(--gray); line-height:1.55;
   background:rgba(255,154,92,.05); border:1px solid rgba(255,154,92,.1);
@@ -815,25 +837,29 @@ body::before {
     <div id="level-select">
       <p class="serif" style="font-size:1.3rem;color:var(--gold);margin-bottom:1rem" id="choose-lvl-title">Choisis ton niveau</p>
       <div class="level-grid">
-        <div class="level-card lv-debutant" onclick="startQuiz('débutant')">
+        <div class="level-card lv-debutant" id="card-débutant" onclick="attemptStart('débutant')" style="position:relative">
           <span class="lv-icon">🌱</span>
           <span class="lv-name" id="lv1n">Débutant</span>
           <span class="lv-desc" id="lv1d">Tu découvres la Kizomba</span>
+          <span class="unlock-req" id="req-débutant"></span>
         </div>
-        <div class="level-card lv-danseur" onclick="startQuiz('danseur')">
+        <div class="level-card lv-danseur" id="card-danseur" onclick="attemptStart('danseur')" style="position:relative">
           <span class="lv-icon">💃</span>
           <span class="lv-name" id="lv2n">Danseur</span>
           <span class="lv-desc" id="lv2d">Tu fréquentes les soirées</span>
+          <span class="unlock-req" id="req-danseur"></span>
         </div>
-        <div class="level-card lv-expert" onclick="startQuiz('expert')">
+        <div class="level-card lv-expert" id="card-expert" onclick="attemptStart('expert')" style="position:relative">
           <span class="lv-icon">⭐</span>
           <span class="lv-name" id="lv3n">Expert</span>
           <span class="lv-desc" id="lv3d">Tu connais les pionniers</span>
+          <span class="unlock-req" id="req-expert"></span>
         </div>
-        <div class="level-card lv-legende" onclick="startQuiz('légende')">
+        <div class="level-card lv-legende" id="card-légende" onclick="attemptStart('légende')" style="position:relative">
           <span class="lv-icon">👑</span>
           <span class="lv-name" id="lv4n">Légende</span>
           <span class="lv-desc" id="lv4d">Niveau coriace. Oses-tu ?</span>
+          <span class="unlock-req" id="req-légende"></span>
         </div>
       </div>
     </div>
@@ -914,6 +940,15 @@ body::before {
     <div class="music-hero card-warm">
       <h2 id="music-title">🎵 Vibration Kiz</h2>
       <p id="music-sub">Ta playlist kizomba — ici et maintenant</p>
+    </div>
+
+    <!-- PLAYLIST PAR DÉFAUT -->
+    <div class="spotify-section">
+      <div class="spotify-title" id="default-playlist-title">🦁 Sélection Kiz</div>
+      <div class="yt-embed-wrap" id="default-yt-wrap">
+        <iframe id="default-yt-frame" height="200" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div id="default-tracks-list" style="display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;margin-top:.7rem;padding:.1rem 0"></div>
     </div>
 
     <!-- SPOTIFY -->
@@ -1003,26 +1038,148 @@ body::before {
 })();
 
 // ════════════════════════════════════════════════
-// FUN FACTS rotatifs
+// FUN FACTS rotatifs — MULTILINGUE
 // ════════════════════════════════════════════════
-const FUN_FACTS = [
-  '"Kizomba signifie fête en kimbundu. Née à Luanda, Angola, dans les années 1980."',
-  '"Le concert de Kassav\' devant 30 000 Angolais à Luanda en 1985 a déclenché la naissance de la Kizomba."',
-  '"Tony Pirata est le premier professeur de Kizomba en France. Champion de France et 3ème en Europe en 2010."',
-  '"L\'Urban Kiz est né à Paris en 2013 avec Curtis Seldon & Cherazad. Le nom officiel date de 2015."',
-  '"La connexion Bluetooth de l\'Urban Kiz : un espace entre les danseurs pour que la follower s\'exprime."',
-  '"Laurent Yìshù : 50% de sa danse vient du Semba et de l\'Afro — pas uniquement du Hip-Hop."',
-  '"Evokeez : Légèreté · Créativité · Musicalité — et au-dessus de tout, le Mindset."',
-  '"La couverture \'Soha Mil Pasos\' de Félicien & Isabelle cumule 39 millions de vues sur YouTube."',
-  '"Jojo (#LetsPlayKizomba) est champion de Double Dutch en dehors de la danse kizomba."',
-  '"Eduardo Paim a désigné C4 Pedro comme continuateur de l\'histoire de la Kizomba."',
-  '"Bonga, père du Semba moderne, s\'appelle de son vrai nom Barceló de Carvalho."',
-  '"DJ SAvvy a créé l\'album Esperança entièrement dédié aux femmes de la scène kizomba."',
-];
+const FUN_FACTS_I18N = {
+  fr:[
+    "Kizomba signifie fête en kimbundu. Née à Luanda, Angola, dans les années 1980.",
+    "Le concert de Kassav' devant 30 000 Angolais à Luanda en 1985 a déclenché la naissance de la Kizomba.",
+    "Tony Pirata est le premier professeur de Kizomba en France. Champion de France et 3ème en Europe en 2010.",
+    "L'Urban Kiz est né à Paris en 2013 avec Curtis Seldon & Cherazad. Le nom officiel date de 2015.",
+    "La connexion Bluetooth de l'Urban Kiz : un espace entre les danseurs pour que la follower s'exprime.",
+    "Laurent Yìshù : 50% de sa danse vient du Semba et de l'Afro — pas uniquement du Hip-Hop.",
+    "Evokeez : Légèreté · Créativité · Musicalité — et au-dessus de tout, le Mindset.",
+    "La couverture 'Soha Mil Pasos' de Félicien & Isabelle cumule 39 millions de vues sur YouTube.",
+    "Jojo (#LetsPlayKizomba) est champion de Double Dutch en dehors de la danse kizomba.",
+    "Eduardo Paim a désigné C4 Pedro comme continuateur de l'histoire de la Kizomba.",
+    "Bonga, père du Semba moderne, s'appelle de son vrai nom Barceló de Carvalho.",
+    "DJ SAvvy a créé l'album Esperança entièrement dédié aux femmes de la scène kizomba.",
+    "Le Semba est considéré comme l'ancêtre direct de la Kizomba angolaise.",
+    "La Tarraxinha est le nom de la musique, la Tarraxa est le nom de la danse — souvent confondus !",
+    "Le Ghetto Zouk est né d'un boys band capverdien, Quatro Plus, à la fin des années 90.",
+    "Le mot 'saudade' capverdien désigne une mélancolie nostalgique qui imprègne la morna.",
+    "La Samba brésilienne descend de l'umbigada, élément du Semba angolais.",
+    "Le Paris Kizomba Congress se tient chaque année à l'aéroport Charles de Gaulle.",
+    "Fred-Nelson a créé l'Urban Kiz Tango, fusion entre Urban Kiz et Tango Argentin.",
+    "Curtis Seldon se décrit comme 'Original Urbankiz creator. King of Urbankiz.'",
+    "Félicien Rossa a joué son propre rôle de prof de kizomba dans le film Friendzone.",
+    "Le mot 'jinga' désigne le balancement naturel du corps en Semba et Kizomba.",
+    "Moun a commencé à danser dès 2008, bien avant la création officielle de l'Urban Kiz.",
+    "Le cadre en kizomba est la structure des bras du meneur — la base de tout guidage.",
+    "L'Angola a connu une guerre civile de 1975 à 2002, pendant laquelle le Semba a résisté comme acte culturel.",
+  ],
+  en:[
+    "Kizomba means 'party' in Kimbundu. Born in Luanda, Angola, in the 1980s.",
+    "Kassav's 1985 concert in front of 30,000 Angolans in Luanda sparked the birth of Kizomba.",
+    "Tony Pirata is the first Kizomba teacher in France. French Champion and 3rd in Europe in 2010.",
+    "Urban Kiz was born in Paris in 2013 with Curtis Seldon & Cherazad. The official name dates from 2015.",
+    "The Urban Kiz 'Bluetooth' connection: a space between dancers so the follower can express herself.",
+    "Laurent Yìshù: 50% of his dance comes from Semba and Afro — not just Hip-Hop.",
+    "Evokeez: Lightness · Creativity · Musicality — and above all, Mindset.",
+    "Félicien & Isabelle's 'Soha Mil Pasos' cover has 39 million views on YouTube.",
+    "Jojo (#LetsPlayKizomba) is a Double Dutch champion outside of kizomba dancing.",
+    "Eduardo Paim named C4 Pedro as the one to continue Kizomba's history.",
+    "Bonga, father of modern Semba, is actually named Barceló de Carvalho.",
+    "DJ SAvvy created the album Esperança entirely dedicated to women in the kizomba scene.",
+    "Semba is considered the direct ancestor of Angolan Kizomba.",
+    "Tarraxinha is the name of the music, Tarraxa is the name of the dance — often confused!",
+    "Ghetto Zouk was born from a Cape Verdean boy band, Quatro Plus, in the late 90s.",
+    "The Cape Verdean word 'saudade' means a nostalgic melancholy found in morna music.",
+    "Brazilian Samba descends from the umbigada, an element of Angolan Semba.",
+    "The Paris Kizomba Congress is held every year at Charles de Gaulle airport.",
+    "Fred-Nelson created Urban Kiz Tango, a fusion of Urban Kiz and Argentine Tango.",
+    "Curtis Seldon describes himself as 'Original Urbankiz creator. King of Urbankiz.'",
+    "Félicien Rossa played his own role as a kizomba teacher in the film Friendzone.",
+    "The word 'jinga' refers to the natural body sway in Semba and Kizomba.",
+    "Moun started dancing as early as 2008, well before Urban Kiz officially existed.",
+    "The frame in kizomba is the leader's arm structure — the foundation of all leading.",
+    "Angola went through a civil war from 1975 to 2002, during which Semba survived as a cultural act.",
+  ],
+  pt:[
+    "Kizomba significa festa em kimbundu. Nasceu em Luanda, Angola, nos anos 1980.",
+    "O concerto dos Kassav' em 1985 perante 30 mil angolanos em Luanda originou a Kizomba.",
+    "Tony Pirata é o primeiro professor de Kizomba em França. Campeão de França e 3º na Europa em 2010.",
+    "O Urban Kiz nasceu em Paris em 2013 com Curtis Seldon & Cherazad. O nome oficial é de 2015.",
+    "A conexão 'Bluetooth' do Urban Kiz: um espaço entre os dançarinos para a follower se expressar.",
+    "Laurent Yìshù: 50% da sua dança vem do Semba e do Afro — não só do Hip-Hop.",
+    "Evokeez: Leveza · Criatividade · Musicalidade — e acima de tudo, o Mindset.",
+    "A cover 'Soha Mil Pasos' de Félicien & Isabelle tem 39 milhões de visualizações no YouTube.",
+    "Jojo (#LetsPlayKizomba) é campeão de Double Dutch fora da dança kizomba.",
+    "Eduardo Paim escolheu C4 Pedro para continuar a história da Kizomba.",
+    "Bonga, pai do Semba moderno, chama-se na realidade Barceló de Carvalho.",
+    "DJ SAvvy criou o álbum Esperança dedicado inteiramente às mulheres da cena kizomba.",
+    "O Semba é considerado o antepassado direto da Kizomba angolana.",
+    "Tarraxinha é o nome da música, Tarraxa é o nome da dança — muitas vezes confundidos!",
+    "O Ghetto Zouk nasceu de uma boy band cabo-verdiana, Quatro Plus, no final dos anos 90.",
+    "A palavra cabo-verdiana 'saudade' designa uma melancolia nostálgica presente na morna.",
+    "O Samba brasileiro descende da umbigada, elemento do Semba angolano.",
+    "O Paris Kizomba Congress acontece todos os anos no aeroporto Charles de Gaulle.",
+    "Fred-Nelson criou o Urban Kiz Tango, fusão entre Urban Kiz e Tango Argentino.",
+  ],
+  es:[
+    "Kizomba significa fiesta en kimbundu. Nació en Luanda, Angola, en los años 1980.",
+    "El concierto de Kassav' en 1985 ante 30.000 angoleños en Luanda originó el nacimiento de la Kizomba.",
+    "Tony Pirata es el primer profesor de Kizomba en Francia. Campeón de Francia y 3º en Europa en 2010.",
+    "El Urban Kiz nació en París en 2013 con Curtis Seldon & Cherazad. El nombre oficial es de 2015.",
+    "La conexión 'Bluetooth' del Urban Kiz: un espacio entre los bailarines para que la follower se exprese.",
+    "Laurent Yìshù: el 50% de su baile viene del Semba y del Afro — no solo del Hip-Hop.",
+    "Evokeez: Ligereza · Creatividad · Musicalidad — y sobre todo, el Mindset.",
+    "El cover 'Soha Mil Pasos' de Félicien & Isabelle tiene 39 millones de vistas en YouTube.",
+    "Jojo (#LetsPlayKizomba) es campeón de Double Dutch fuera del baile kizomba.",
+    "Eduardo Paim designó a C4 Pedro para continuar la historia de la Kizomba.",
+    "Bonga, padre del Semba moderno, se llama en realidad Barceló de Carvalho.",
+    "DJ SAvvy creó el álbum Esperança dedicado por completo a las mujeres de la escena kizomba.",
+    "El Semba es considerado el antepasado directo de la Kizomba angoleña.",
+    "Tarraxinha es el nombre de la música, Tarraxa es el nombre del baile — ¡a menudo se confunden!",
+    "El Ghetto Zouk nació de una boy band caboverdiana, Quatro Plus, a finales de los 90.",
+    "La palabra caboverdiana 'saudade' designa una melancolía nostálgica presente en la morna.",
+    "La Samba brasileña desciende de la umbigada, elemento del Semba angoleño.",
+    "El Paris Kizomba Congress se celebra cada año en el aeropuerto Charles de Gaulle.",
+  ],
+  nl:[
+    "Kizomba betekent feest in het Kimbundu. Geboren in Luanda, Angola, in de jaren 1980.",
+    "Het concert van Kassav' in 1985 voor 30.000 Angolezen in Luanda leidde tot het ontstaan van Kizomba.",
+    "Tony Pirata is de eerste Kizomba-leraar in Frankrijk. Frans kampioen en 3e in Europa in 2010.",
+    "Urban Kiz ontstond in Parijs in 2013 met Curtis Seldon & Cherazad. De officiële naam dateert van 2015.",
+    "De 'Bluetooth'-connectie van Urban Kiz: ruimte tussen dansers zodat de follower zich kan uiten.",
+    "Laurent Yìshù: 50% van zijn dans komt van Semba en Afro — niet alleen van Hip-Hop.",
+    "Evokeez: Lichtheid · Creativiteit · Muzikaliteit — en bovenal, de Mindset.",
+    "De cover 'Soha Mil Pasos' van Félicien & Isabelle heeft 39 miljoen views op YouTube.",
+    "Jojo (#LetsPlayKizomba) is Double Dutch-kampioen naast het kizomba dansen.",
+    "Eduardo Paim wees C4 Pedro aan als opvolger van de geschiedenis van Kizomba.",
+    "Bonga, vader van de moderne Semba, heet eigenlijk Barceló de Carvalho.",
+    "DJ SAvvy maakte het album Esperança, volledig gewijd aan vrouwen in de kizombascene.",
+    "Semba wordt beschouwd als de directe voorouder van de Angolese Kizomba.",
+    "Tarraxinha is de naam van de muziek, Tarraxa is de naam van de dans — vaak verward!",
+    "Ghetto Zouk ontstond uit een Kaapverdische boyband, Quatro Plus, eind jaren 90.",
+    "Het Kaapverdische woord 'saudade' verwijst naar een nostalgische melancholie in de morna.",
+    "Braziliaanse Samba stamt af van de umbigada, een element van de Angolese Semba.",
+  ],
+  de:[
+    "Kizomba bedeutet Fest auf Kimbundu. Entstanden in Luanda, Angola, in den 1980er Jahren.",
+    "Das Konzert von Kassav' 1985 vor 30.000 Angolanern in Luanda löste die Entstehung der Kizomba aus.",
+    "Tony Pirata ist der erste Kizomba-Lehrer in Frankreich. Französischer Meister und 2010 3. in Europa.",
+    "Urban Kiz entstand 2013 in Paris mit Curtis Seldon & Cherazad. Der offizielle Name stammt von 2015.",
+    "Die 'Bluetooth'-Verbindung im Urban Kiz: ein Raum zwischen den Tänzern, damit die Followerin sich ausdrücken kann.",
+    "Laurent Yìshù: 50% seines Tanzes stammen aus Semba und Afro — nicht nur aus Hip-Hop.",
+    "Evokeez: Leichtigkeit · Kreativität · Musikalität — und vor allem, das Mindset.",
+    "Das Cover 'Soha Mil Pasos' von Félicien & Isabelle hat 39 Millionen Aufrufe auf YouTube.",
+    "Jojo (#LetsPlayKizomba) ist Double-Dutch-Champion neben dem Kizomba-Tanzen.",
+    "Eduardo Paim benannte C4 Pedro als Fortsetzer der Geschichte der Kizomba.",
+    "Bonga, Vater des modernen Semba, heißt eigentlich Barceló de Carvalho.",
+    "DJ SAvvy schuf das Album Esperança, das ganz den Frauen der Kizomba-Szene gewidmet ist.",
+    "Semba gilt als der direkte Vorfahre der angolanischen Kizomba.",
+    "Tarraxinha ist der Name der Musik, Tarraxa der Name des Tanzes — oft verwechselt!",
+    "Ghetto Zouk entstand Ende der 90er aus einer kapverdischen Boyband, Quatro Plus.",
+    "Das kapverdische Wort 'saudade' bezeichnet eine nostalgische Melancholie in der Morna-Musik.",
+    "Brasilianischer Samba stammt von der umbigada ab, einem Element des angolanischen Semba.",
+  ],
+};
 let factIdx = 0;
 function rotateFact(){
   const el = document.getElementById('fun-fact');
-  if(el){ el.style.opacity='0'; setTimeout(()=>{ factIdx=(factIdx+1)%FUN_FACTS.length; el.textContent=FUN_FACTS[factIdx]; el.style.opacity='1'; },400); }
+  const list = FUN_FACTS_I18N[lang] || FUN_FACTS_I18N.fr;
+  if(el){ el.style.opacity='0'; setTimeout(()=>{ factIdx=(factIdx+1)%list.length; el.textContent='"'+list[factIdx]+'"'; el.style.opacity='1'; },400); }
 }
 setInterval(rotateFact, 6000);
 
@@ -1041,6 +1198,55 @@ const flags = {fr:'🇫🇷',en:'🇬🇧',pt:'🇵🇹',es:'🇪🇸',nl:'🇳�
 let lang = 'fr';
 
 function t(k){ return (T[lang]||T.fr)[k] || k; }
+
+// ── BADGES / RANKS / NOTE CATS — traductions par langue ──
+const BADGE_I18N = {
+  first_quiz:{ fr:['Apprenti','Premier quiz terminé. Bienvenue !'], en:['Apprentice','First quiz completed. Welcome!'], pt:['Aprendiz','Primeiro quiz concluído. Bem-vindo!'], es:['Aprendiz','Primer quiz completado. ¡Bienvenido!'], nl:['Leerling','Eerste quiz voltooid. Welkom!'], de:['Lehrling','Erstes Quiz abgeschlossen. Willkommen!'] },
+  quiz_5:{ fr:['Danseur Social','5 quiz complétés. La scène te connaît.'], en:['Social Dancer','5 quizzes done. The scene knows you.'], pt:['Dançarino Social','5 quizzes feitos. A cena conhece-te.'], es:['Bailarín Social','5 quizzes hechos. La escena te conoce.'], nl:['Sociale Danser','5 quizzen voltooid. De scene kent je.'], de:['Social Tänzer','5 Quiz absolviert. Die Szene kennt dich.'] },
+  quiz_10:{ fr:['Mélomane Kiz','10 quiz ! La musique coule dans tes veines.'], en:['Kiz Melomaniac','10 quizzes! Music flows in your veins.'], pt:['Melómano Kiz','10 quizzes! A música corre nas tuas veias.'], es:['Melómano Kiz','¡10 quizzes! La música corre por tus venas.'], nl:['Kiz Melomaan','10 quizzen! Muziek stroomt door je aderen.'], de:['Kiz Melomane','10 Quiz! Musik fließt durch deine Adern.'] },
+  quiz_25:{ fr:['Ambassadeur','25 quiz. Tu portes la culture haut.'], en:['Ambassador','25 quizzes. You carry the culture high.'], pt:['Embaixador','25 quizzes. Levas a cultura bem alto.'], es:['Embajador','25 quizzes. Llevas la cultura muy alto.'], nl:['Ambassadeur','25 quizzen. Je draagt de cultuur hoog.'], de:['Botschafter','25 Quiz. Du trägst die Kultur hoch.'] },
+  perfect:{ fr:['Parfait','Score parfait 10/10. Redoutable !'], en:['Perfect','Perfect score 10/10. Formidable!'], pt:['Perfeito','Pontuação perfeita 10/10. Formidável!'], es:['Perfecto','Puntuación perfecta 10/10. ¡Formidable!'], nl:['Perfect','Perfecte score 10/10. Formidabel!'], de:['Perfekt','Perfekter Score 10/10. Beeindruckend!'] },
+  perfect_3:{ fr:['Inarrêtable','3 scores parfaits. Légende en devenir.'], en:['Unstoppable','3 perfect scores. Legend in the making.'], pt:['Imparável','3 pontuações perfeitas. Lenda em formação.'], es:['Imparable','3 puntuaciones perfectas. Leyenda en formación.'], nl:['Onstopbaar','3 perfecte scores. Legende in wording.'], de:['Unaufhaltsam','3 perfekte Ergebnisse. Werdende Legende.'] },
+  expert_ok:{ fr:['Pionnier','Expert terminé avec 8/10 minimum.'], en:['Pioneer','Expert level cleared with 8/10 minimum.'], pt:['Pioneiro','Nível Especialista com 8/10 no mínimo.'], es:['Pionero','Nivel Experto superado con 8/10 mínimo.'], nl:['Pionier','Expert-niveau gehaald met minstens 8/10.'], de:['Pionier','Experten-Level mit mind. 8/10 geschafft.'] },
+  legend_ok:{ fr:['Légende Vivante','Légende terminée avec 8/10. TU ES la culture.'], en:['Living Legend','Legend level cleared with 8/10. YOU ARE the culture.'], pt:['Lenda Viva','Nível Lenda com 8/10. TU ÉS a cultura.'], es:['Leyenda Viva','Nivel Leyenda con 8/10. TÚ ERES la cultura.'], nl:['Levende Legende','Legende-niveau met 8/10. JIJ BENT de cultuur.'], de:['Lebende Legende','Legenden-Level mit 8/10. DU BIST die Kultur.'] },
+  streak_3:{ fr:['Régulier','3 jours consécutifs de jeu.'], en:['Regular','3 consecutive days playing.'], pt:['Regular','3 dias consecutivos a jogar.'], es:['Regular','3 días consecutivos jugando.'], nl:['Regelmatig','3 opeenvolgende dagen gespeeld.'], de:['Regelmäßig','3 aufeinanderfolgende Spieltage.'] },
+  streak_7:{ fr:['Kizomba Every Day','7 jours de suite. Le vrai mindset.'], en:['Kizomba Every Day','7 days in a row. The real mindset.'], pt:['Kizomba Every Day','7 dias seguidos. O verdadeiro mindset.'], es:['Kizomba Every Day','7 días seguidos. La verdadera mentalidad.'], nl:['Kizomba Every Day','7 dagen op rij. De echte mindset.'], de:['Kizomba Every Day','7 Tage in Folge. Das echte Mindset.'] },
+  xp_500:{ fr:['Expert XP','500 XP accumulés.'], en:['XP Expert','500 XP accumulated.'], pt:['XP Especialista','500 XP acumulados.'], es:['Experto XP','500 XP acumulados.'], nl:['XP Expert','500 XP verzameld.'], de:['XP Experte','500 XP gesammelt.'] },
+  xp_1000:{ fr:['Galactic','1000 XP ! Niveau DJ Kizomba Galactic.'], en:['Galactic','1000 XP! DJ Kizomba Galactic level.'], pt:['Galactic','1000 XP! Nível DJ Kizomba Galactic.'], es:['Galactic','¡1000 XP! Nivel DJ Kizomba Galactic.'], nl:['Galactic','1000 XP! DJ Kizomba Galactic niveau.'], de:['Galactic','1000 XP! DJ Kizomba Galactic Level.'] },
+  all_levels:{ fr:['Complet','Tous les niveaux joués.'], en:['Complete','All levels played.'], pt:['Completo','Todos os níveis jogados.'], es:['Completo','Todos los niveles jugados.'], nl:['Compleet','Alle niveaus gespeeld.'], de:['Komplett','Alle Level gespielt.'] },
+  notes_3:{ fr:['Chroniqueur','3 notes de cours ajoutées.'], en:['Chronicler','3 class notes added.'], pt:['Cronista','3 notas de aula adicionadas.'], es:['Cronista','3 notas de clase añadidas.'], nl:['Kroniekschrijver','3 lesnotities toegevoegd.'], de:['Chronist','3 Unterrichtsnotizen hinzugefügt.'] },
+};
+function bName(id){ const b=BADGE_I18N[id]; return b ? (b[lang]||b.fr)[0] : id; }
+function bDesc(id){ const b=BADGE_I18N[id]; return b ? (b[lang]||b.fr)[1] : ''; }
+
+const RANK_I18N = {
+  fr:['Kizombeiro Débutant','Danseur de Soirée','Passionné Kiz','Expert de la Scène','Pionnier','Légende Vivante','DJ Kizomba Galactic'],
+  en:['Beginner Kizombeiro','Party Dancer','Kiz Enthusiast','Scene Expert','Pioneer','Living Legend','DJ Kizomba Galactic'],
+  pt:['Kizombeiro Iniciante','Dançarino de Festa','Apaixonado por Kiz','Especialista da Cena','Pioneiro','Lenda Viva','DJ Kizomba Galactic'],
+  es:['Kizombeiro Principiante','Bailarín de Fiesta','Apasionado del Kiz','Experto de la Escena','Pionero','Leyenda Viva','DJ Kizomba Galactic'],
+  nl:['Beginnende Kizombeiro','Feestdanser','Kiz-liefhebber','Scene-expert','Pionier','Levende Legende','DJ Kizomba Galactic'],
+  de:['Anfänger Kizombeiro','Party-Tänzer','Kiz-Enthusiast','Szenen-Experte','Pionier','Lebende Legende','DJ Kizomba Galactic'],
+};
+function rName(idx){ const r=RANK_I18N[lang]||RANK_I18N.fr; return r[idx]; }
+
+const NOTECAT_I18N = {
+  fr:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','Histoire & Culture','Technique','Musicalité','Mindset'],
+  en:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','History & Culture','Technique','Musicality','Mindset'],
+  pt:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','História & Cultura','Técnica','Musicalidade','Mindset'],
+  es:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','Historia y Cultura','Técnica','Musicalidad','Mindset'],
+  nl:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','Geschiedenis & Cultuur','Techniek','Muzikaliteit','Mindset'],
+  de:['Kizomba','Urban Kiz','Semba','Tarraxo','Tarraxinha','Ghetto Zouk','Geschichte & Kultur','Technik','Musikalität','Mindset'],
+};
+
+const LOCK_I18N = {
+  fr:{ needScore:(s,n)=>`🔒 Termine ${s} avec ${n}/10 min.`, toast:(s,n)=>`Termine d'abord "${s}" avec ${n}/10 minimum !` },
+  en:{ needScore:(s,n)=>`🔒 Clear ${s} with ${n}/10 min.`, toast:(s,n)=>`First clear "${s}" with ${n}/10 minimum!` },
+  pt:{ needScore:(s,n)=>`🔒 Termina ${s} com ${n}/10 min.`, toast:(s,n)=>`Termina primeiro "${s}" com ${n}/10 no mínimo!` },
+  es:{ needScore:(s,n)=>`🔒 Termina ${s} con ${n}/10 mín.`, toast:(s,n)=>`¡Primero termina "${s}" con ${n}/10 mínimo!` },
+  nl:{ needScore:(s,n)=>`🔒 Voltooi ${s} met min. ${n}/10.`, toast:(s,n)=>`Voltooi eerst "${s}" met minstens ${n}/10!` },
+  de:{ needScore:(s,n)=>`🔒 Schließe ${s} mit min. ${n}/10 ab.`, toast:(s,n)=>`Schließe zuerst "${s}" mit mind. ${n}/10 ab!` },
+};
+function lockL(){ return LOCK_I18N[lang]||LOCK_I18N.fr; }
 
 function setLang(l, btn){
   lang = l;
@@ -1075,6 +1281,25 @@ function applyTr(){
   document.getElementById('nl-music').textContent = t('navMusic');
   document.getElementById('nl-profil').textContent = t('navProfil');
   document.getElementById('lang-display').textContent = flags[lang]+' '+lang.toUpperCase();
+
+  // Traduire les catégories de notes
+  const catSel = document.getElementById('ni-cat');
+  if(catSel){
+    const cats = NOTECAT_I18N[lang]||NOTECAT_I18N.fr;
+    const currentVal = catSel.selectedIndex;
+    catSel.innerHTML = cats.map(c=>`<option>${c}</option>`).join('');
+    catSel.selectedIndex = currentVal >=0 ? currentVal : 0;
+  }
+  document.getElementById('lbl-title') && (document.getElementById('lbl-title').textContent = lang==='en'?'Title':lang==='pt'?'Título':lang==='es'?'Título':lang==='nl'?'Titel':lang==='de'?'Titel':'Titre');
+  document.getElementById('lbl-cat') && (document.getElementById('lbl-cat').textContent = lang==='en'?'Style / Category':lang==='pt'?'Estilo / Categoria':lang==='es'?'Estilo / Categoría':lang==='nl'?'Stijl / Categorie':lang==='de'?'Stil / Kategorie':'Style / Catégorie');
+  document.getElementById('lbl-content') && (document.getElementById('lbl-content').textContent = lang==='en'?'Your note':lang==='pt'?'A tua nota':lang==='es'?'Tu nota':lang==='nl'?'Jouw notitie':lang==='de'?'Deine Notiz':'Ta note');
+
+  // Refresh contenu dynamique déjà rendu
+  renderLevelLocks();
+  renderNotes();
+  renderDefaultTracks();
+  updateProfil();
+  factIdx = -1; rotateFact();
 }
 
 // ════════════════════════════════════════════════
@@ -1101,6 +1326,35 @@ function showPage(p){
 // ════════════════════════════════════════════════
 // MUSIC — Spotify & YouTube
 // ════════════════════════════════════════════════
+// ════════════════════════════════════════════════
+// PLAYLIST PAR DÉFAUT — DJ Kizomba Galactic
+// ════════════════════════════════════════════════
+const DEFAULT_YT_TRACKS = [
+  { id:'xYFk-YJUd_Q', icon:'🌟' },
+  { id:'CGzUL3SEvxc', icon:'🔥' },
+  { id:'wjraSXiyfSY', icon:'🌊' },
+  { id:'jZnBX-w3u8o', icon:'💫' },
+];
+let currentDefaultTrack = -1;
+
+function renderDefaultTracks(){
+  const el = document.getElementById('default-tracks-list');
+  if(!el) return;
+  el.innerHTML = DEFAULT_YT_TRACKS.map((tr,i)=>
+    `<div class="dtrack-chip ${i===currentDefaultTrack?'playing':''}" onclick="playDefaultTrack(${i})">
+      <span class="dtrack-ic">${tr.icon}</span>
+      <span class="dtrack-lbl">Track ${i+1}</span>
+    </div>`
+  ).join('');
+}
+
+function playDefaultTrack(i){
+  currentDefaultTrack = i;
+  const frame = document.getElementById('default-yt-frame');
+  frame.src = `https://www.youtube.com/embed/${DEFAULT_YT_TRACKS[i].id}?autoplay=1`;
+  renderDefaultTracks();
+}
+
 function loadSpotify(){
   const url = document.getElementById('spotify-url').value.trim();
   if(!url){ alert('Colle un lien Spotify !'); return; }
@@ -1481,25 +1735,57 @@ const BADGES = [
 ];
 const XP_PER = {débutant:10,danseur:20,expert:35,légende:50};
 const RANKS = [
-  {name:'Kizombeiro Débutant',icon:'🌱',min:0},
-  {name:'Danseur de Soirée',  icon:'💃',min:100},
-  {name:'Passionné Kiz',      icon:'🎵',min:250},
-  {name:'Expert de la Scène', icon:'⭐',min:500},
-  {name:'Pionnier',           icon:'🔥',min:800},
-  {name:'Légende Vivante',    icon:'👑',min:1200},
-  {name:'DJ Kizomba Galactic',icon:'🦁',min:2000},
+  {icon:'🌱',min:0},
+  {icon:'💃',min:100},
+  {icon:'🎵',min:250},
+  {icon:'⭐',min:500},
+  {icon:'🔥',min:800},
+  {icon:'👑',min:1200},
+  {icon:'🦁',min:2000},
 ];
 
 function loadStats(){
   const r = localStorage.getItem('kzq_stats');
-  if(r){ const s=JSON.parse(r); s.levelsPlayed=new Set(s.lpa||[]); return s; }
-  return {totalXP:0,totalQuiz:0,perfectScores:0,expertPassed:false,legendPassed:false,streak:0,lastPlay:'',levelsPlayed:new Set(),lpa:[],notesCount:0,unlocked:[]};
+  if(r){ const s=JSON.parse(r); s.levelsPlayed=new Set(s.lpa||[]); s.lb=s.lb||{débutant:0,danseur:0,expert:0,légende:0}; return s; }
+  return {totalXP:0,totalQuiz:0,perfectScores:0,expertPassed:false,legendPassed:false,streak:0,lastPlay:'',levelsPlayed:new Set(),lpa:[],notesCount:0,unlocked:[],lb:{débutant:0,danseur:0,expert:0,légende:0}};
 }
 function saveStats(s){ s.lpa=[...s.levelsPlayed]; localStorage.setItem('kzq_stats',JSON.stringify(s)); }
 
-function getRank(xp){ let r=RANKS[0]; for(const x of RANKS){ if(xp>=x.min) r=x; } return r; }
-function getNext(xp){ for(const x of RANKS){ if(xp<x.min) return x; } return null; }
+function getRank(xp){ let idx=0; RANKS.forEach((x,i)=>{ if(xp>=x.min) idx=i; }); return {...RANKS[idx], idx, name:rName(idx)}; }
+function getNext(xp){ for(let i=0;i<RANKS.length;i++){ if(xp<RANKS[i].min) return {...RANKS[i], idx:i, name:rName(i)}; } return null; }
 function getXPPct(xp){ const r=getRank(xp),n=getNext(xp); if(!n) return 100; return Math.round(((xp-r.min)/(n.min-r.min))*100); }
+
+// ── LEVEL LOCKING ──
+const LEVEL_ORDER = ['débutant','danseur','expert','légende'];
+const UNLOCK_REQ = {danseur:{prev:'débutant',score:6}, expert:{prev:'danseur',score:7}, légende:{prev:'expert',score:8}};
+function isUnlocked(level){
+  if(level==='débutant') return true;
+  const req=UNLOCK_REQ[level];
+  const s=loadStats();
+  return (s.lb[req.prev]||0) >= req.score;
+}
+function attemptStart(level){
+  if(isUnlocked(level)){ startQuiz(level); return; }
+  const req=UNLOCK_REQ[level];
+  const prevName = t('lv'+(LEVEL_ORDER.indexOf(req.prev)+1));
+  showToast('🔒', lockL().needScore(prevName,req.score), lockL().toast(prevName,req.score));
+}
+function renderLevelLocks(){
+  LEVEL_ORDER.forEach((lvl,i)=>{
+    const card=document.getElementById('card-'+lvl);
+    const reqEl=document.getElementById('req-'+lvl);
+    if(!card) return;
+    const unlocked=isUnlocked(lvl);
+    card.classList.toggle('locked', !unlocked);
+    if(!unlocked){
+      const req=UNLOCK_REQ[lvl];
+      const prevName=t('lv'+(LEVEL_ORDER.indexOf(req.prev)+1));
+      reqEl.textContent = lockL().needScore(prevName,req.score);
+      reqEl.style.display='block';
+    } else if(reqEl){ reqEl.style.display='none'; }
+  });
+}
+
 
 function updateStreak(s){
   const today=new Date().toDateString();
@@ -1532,8 +1818,8 @@ function showNextBadge(){
   if(!badgeQ.length) return;
   const b=badgeQ.shift();
   document.getElementById('m-ic').textContent=b.icon;
-  document.getElementById('m-name').textContent=b.name;
-  document.getElementById('m-desc').textContent=b.desc;
+  document.getElementById('m-name').textContent=bName(b.id);
+  document.getElementById('m-desc').textContent=bDesc(b.id);
   document.getElementById('modal-ov').classList.add('open');
 }
 function closeModal(){ document.getElementById('modal-ov').classList.remove('open'); setTimeout(()=>{ if(badgeQ.length) showNextBadge(); },400); }
@@ -1548,23 +1834,25 @@ function awardRewards(level,score,total){
   if(level==='expert'&&pct>=.8) s.expertPassed=true;
   if(level==='légende'&&pct>=.8) s.legendPassed=true;
   s.notesCount=notes.length;
+  s.lb=s.lb||{débutant:0,danseur:0,expert:0,légende:0};
+  s.lb[level]=Math.max(s.lb[level]||0, score);
   const got=checkBadges(s);
   if(score>bestScore){ bestScore=score; localStorage.setItem('kzq_best',bestScore); }
   saveStats(s);
 
   // UI
-  document.getElementById('xp-banner').innerHTML=`+<strong>${xp} XP</strong> gagnés${s.streak>1?` 🔥 Série ×${s.streak}`:''}`;
+  document.getElementById('xp-banner').innerHTML=`+<strong>${xp} XP</strong>${s.streak>1?` 🔥 ×${s.streak}`:''}`;
   const be=document.getElementById('badges-earned');
-  be.innerHTML=got.map(b=>`<span class="badge-chip">${b.icon} ${b.name}</span>`).join('');
+  be.innerHTML=got.map(b=>`<span class="badge-chip">${b.icon} ${bName(b.id)}</span>`).join('');
 
   if(got.length){ badgeQ=[...got]; setTimeout(showNextBadge,700); }
-  else showToast('⭐',`+${xp} XP !`,getRank(s.totalXP).icon+' '+getRank(s.totalXP).name);
+  else { const r=getRank(s.totalXP); showToast('⭐',`+${xp} XP !`,r.icon+' '+r.name); }
 
-  renderHomeXP(); updateHomeStats();
+  renderHomeXP(); updateHomeStats(); renderLevelLocks();
 }
 
 function renderHomeXP(){
-  const s=loadStats(), pct=getXPPct(s.totalXP), r=getRank(s.totalXP), n=getNext(s.totalXP);
+  const s=loadStats(), pct=getXPPct(s.totalXP), r=getRank(s.totalXP);
   document.getElementById('home-xp-bar').innerHTML=`
     <div class="xp-row"><span class="xp-lbl">${r.icon} ${r.name}</span><span class="xp-val">${s.totalXP} XP</span></div>
     <div class="xp-track"><div class="xp-fill" style="width:${pct}%"></div></div>`;
@@ -1583,7 +1871,7 @@ function updateProfil(){
   document.getElementById('p-rank').textContent=r.name;
   document.getElementById('p-xp').textContent=s.totalXP+' XP total';
   document.getElementById('p-rank-lbl').textContent=r.icon+' '+r.name;
-  document.getElementById('p-next-lbl').textContent=n?`→ ${n.name} (${n.min} XP)`:'🏆 Rang max !';
+  document.getElementById('p-next-lbl').textContent=n?`→ ${n.name} (${n.min} XP)`:'🏆';
   document.getElementById('p-xp-fill').style.width=pct+'%';
   document.getElementById('p-streak').textContent=s.streak;
   document.getElementById('p-streak-l').textContent=' '+t('streakLabel');
@@ -1594,15 +1882,15 @@ function updateProfil(){
   const g=document.getElementById('badges-g');
   g.innerHTML=BADGES.map(b=>{
     const on=s.unlocked.includes(b.id);
-    return `<div class="badge-i ${on?'on':'off'}" ${on?`onclick="showBadgeDet('${b.id}')"`:''}><span class="badge-ic">${b.icon}</span><div class="badge-nm">${b.name}</div></div>`;
+    return `<div class="badge-i ${on?'on':'off'}" ${on?`onclick="showBadgeDet('${b.id}')"`:''}><span class="badge-ic">${b.icon}</span><div class="badge-nm">${bName(b.id)}</div></div>`;
   }).join('');
 }
 
 function showBadgeDet(id){
   const b=BADGES.find(x=>x.id===id); if(!b) return;
   document.getElementById('m-ic').textContent=b.icon;
-  document.getElementById('m-name').textContent=b.name;
-  document.getElementById('m-desc').textContent=b.desc;
+  document.getElementById('m-name').textContent=bName(b.id);
+  document.getElementById('m-desc').textContent=bDesc(b.id);
   document.getElementById('modal-ov').classList.add('open');
   badgeQ=[];
 }
@@ -1749,6 +2037,8 @@ function renderNotes(){
 // ════════════════════════════════════════════════
 window.addEventListener('load', ()=>{
   updateHomeStats();
+  renderDefaultTracks();
+  renderLevelLocks();
   document.getElementById('fun-fact').style.transition='opacity .4s';
 });
 </script>
